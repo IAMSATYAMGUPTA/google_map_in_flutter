@@ -38,6 +38,10 @@ dependencies:
   google_maps_flutter: ^2.3.0
   geolocator: ^10.1.0
 
+  #  web purpose
+  google_maps_flutter_web: ^0.5.4+1
+
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
