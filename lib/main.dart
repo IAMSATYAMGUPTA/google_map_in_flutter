@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
+import 'get_current address.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +20,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: CurrentAddressPage(),
     );
   }
 }
@@ -33,8 +35,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
 
   var pos;
-  var latitude;
-  var longitude;
+  LatLng? myLoc;
 
   @override
   void initState() {
@@ -47,7 +48,7 @@ class _HomePageState extends State<HomePage> {
     if(pos==null){
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
-    var initPos = CameraPosition(target: LatLng(latitude, longitude),zoom: 15);
+    var initPos = CameraPosition(target: myLoc!,zoom: 15);
     return Scaffold(
       appBar: AppBar(
         title: Text("Maps"),
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                     title: "My Location"
                 ),
                 markerId: MarkerId('3'),
-                position: LatLng(latitude , longitude),
+                position: myLoc!,
                 onTap: (){
                   print('Tapped on Marker3...');
                 }
@@ -126,8 +127,7 @@ class _HomePageState extends State<HomePage> {
   void getCurrentLocation()async{
     pos = await Geolocator.getCurrentPosition();
     print("Location: ${pos.latitude}, ${pos.longitude}");
-    latitude = pos.latitude;
-    longitude = pos.longitude;
+    myLoc = LatLng(pos.latitude, pos.longitude);
     setState(() {
 
     });
@@ -141,6 +141,7 @@ class _HomePageState extends State<HomePage> {
     StreamSubscription<Position> positionStream = Geolocator.getPositionStream(locationSettings: locationSettings).listen(
             (Position? position) {
           print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+
         });
   }
 
